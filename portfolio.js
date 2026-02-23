@@ -1,5 +1,24 @@
 // Portfolio Functions for Alexis BERIOT
 
+// Module-level counter for unique project IDs
+let projectCounter = 0;
+
+/**
+ * Escapes HTML special characters to prevent XSS attacks
+ * @param {string} text - Text to escape
+ * @returns {string} Escaped text safe for HTML
+ */
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, char => map[char]);
+}
+
 /**
  * Toggles a project box between expanded and collapsed states
  * Changes the state from 1 (large) to 0 (small) or vice versa
@@ -30,26 +49,30 @@ function toggleProjectBox(projectElement) {
  * @returns {string} HTML string for the project box
  */
 function developProject(big, type, category, shortInfo, longInfo, skillList = []) {
-    const projectId = `project-${Date.now()}`;
+    const projectId = `project-${Date.now()}-${++projectCounter}`;
     const sizeClass = big === 1 ? 'project-large' : 'project-small';
     const content = big === 1 ? longInfo : shortInfo;
     const typeLabel = type === 1 ? 'Personal Project' : 'School Project';
     
+    // Escape all user-controlled values to prevent XSS
+    const escapedCategory = escapeHtml(category);
+    const escapedContent = escapeHtml(content);
+    
     let skillsHtml = '';
     if (skillList && skillList.length > 0) {
         skillsHtml = '<div class="skills-container">' + 
-            skillList.map(skill => `<span class="skill-tag" data-skill="${skill}">${skill}</span>`).join('') + 
+            skillList.map(skill => `<span class="skill-tag" data-skill="${escapeHtml(skill)}">${escapeHtml(skill)}</span>`).join('') + 
             '</div>';
     }
     
     const html = `
         <div id="${projectId}" class="project-box ${sizeClass}" data-expanded="${big}" onclick="toggleProjectBox(this)">
             <div class="project-header">
-                <h3 class="project-title">${category}</h3>
+                <h3 class="project-title">${escapedCategory}</h3>
                 <span class="project-type">${typeLabel}</span>
             </div>
             <div class="project-content">
-                ${content}
+                ${escapedContent}
             </div>
             ${skillsHtml}
         </div>
@@ -71,7 +94,13 @@ function switchLanguage(lang) {
         newUrl = currentUrl.replace(/-fr(\.html)$/i, '$1');
     } else {
         // Switch to French - add "-fr" before ".html"
-        newUrl = currentUrl.replace(/(\w+)(\.html)$/i, '$1-fr$2');
+        // Check if already ends with "-fr.html" to avoid duplicate "-fr-fr"
+        if (!/-fr\.html$/i.test(currentUrl)) {
+            // Use safe replace targeting only the extension
+            newUrl = currentUrl.replace(/(\.html)$/i, '-fr$1');
+        } else {
+            newUrl = currentUrl;
+        }
     }
     
     // Only navigate if URL changed
@@ -205,7 +234,7 @@ function sendEmail(target, title, content, senderEmail = '', senderPhone = '') {
     // Fallback: Log to console for development
     console.log('Email would be sent with the following content:');
     console.log({ target, title, content: emailContent });
-    showSuccess('Message sent! (Dev mode)');
+    showInfo('Preview only — no email was sent. EmailJS is not configured.');
 }
 
 /**
@@ -285,6 +314,26 @@ function showSuccess(message) {
     
     setTimeout(() => {
         successDiv.style.display = 'none';
+    }, 5000);
+}
+
+/**
+ * Shows an info message to the user
+ * @param {string} message - Info message
+ */
+function showInfo(message) {
+    const infoDiv = document.getElementById('info-message') || document.createElement('div');
+    infoDiv.id = 'info-message';
+    infoDiv.className = 'info-message';
+    infoDiv.textContent = message;
+    infoDiv.style.display = 'block';
+    
+    if (!document.getElementById('info-message')) {
+        document.body.insertBefore(infoDiv, document.body.firstChild);
+    }
+    
+    setTimeout(() => {
+        infoDiv.style.display = 'none';
     }, 5000);
 }
 
