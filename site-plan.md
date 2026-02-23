@@ -81,6 +81,29 @@ Contact information (mail) and a form to fill in a name, email/phone number, and
 ## [Limitations]
 * No SQL / Database, the site should be fully static
 
+## [External Libraries & Dependencies]
+
+### EmailJS (v4.x)
+* **Purpose**: Enables client-side email sending for the contact form without requiring a backend server
+* **CDN Link**: `https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js`
+* **Integration**: Included via `<script>` tag in the `<head>` section of all HTML pages
+* **Configuration Required**:
+  - Service ID: Replace `'service_id'` in portfolio.js
+  - Template ID: Replace `'template_id'` in portfolio.js
+  - Public Key: Replace `'public_key'` in portfolio.js
+* **Setup Instructions**:
+  1. Create free account at https://www.emailjs.com/
+  2. Add email service (Gmail, Outlook, etc.)
+  3. Create email template
+  4. Copy Service ID, Template ID, and Public Key
+  5. Update values in `sendEmail()` function in portfolio.js
+* **Fallback Behavior**: If credentials not configured, displays info message on localhost (preview mode)
+
+### Custom Scripts
+* **portfolio.js**: Core functionality module containing all portfolio features
+  - Included via `<script src="portfolio.js" defer></script>` in all HTML pages
+  - Uses `defer` attribute to ensure DOM is ready before execution
+
 ## [Implementation Details]
 
 ### Security Features
