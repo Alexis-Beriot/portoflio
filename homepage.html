@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Alexis BERIOT</title>
+    
+    <!-- EmailJS Library for Contact Form -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
+    <!-- Portfolio JavaScript -->
+    <script src="portfolio.js" defer></script>
+    
+    <style>
+        /* Basic styling - customize as needed */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .language-switcher button {
+            margin-left: 0.5rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+        
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .skills-section, .projects-section {
+            margin: 2rem 0;
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            margin: 0.25rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .skill-highlighted {
+            background: #ffc107;
+            color: #000;
+        }
+        
+        .project-box {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .project-small {
+            max-height: 150px;
+            overflow: hidden;
+        }
+        
+        .project-large {
+            max-height: none;
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .project-type {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .navigation-buttons {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .navigation-buttons a {
+            display: inline-block;
+            padding: 1rem 2rem;
+            margin: 0.5rem;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        
+        footer {
+            background: #f4f4f4;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+        }
+        
+        button[type="submit"] {
+            background: #28a745;
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .error-message, .success-message, .info-message {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .info-message {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Portfolio: Alexis BERIOT</h1>
+        <div class="language-switcher">
+            <button onclick="switchLanguage(1)">EN</button>
+            <button onclick="switchLanguage(0)">FR</button>
+        </div>
+    </header>
+    
+    <main>
+        <section class="skills-section">
+            <h2>Skills</h2>
+            <div id="skills-list">
+                <h3>General Programming</h3>
+                <span class="skill-tag" data-skill="project-management">Project Management</span>
+                <span class="skill-tag" data-skill="database">Database (MySQL, PostgreSQL, SQLite)</span>
+                
+                <h3>Web Programming</h3>
+                <span class="skill-tag" data-skill="html">HTML</span>
+                <span class="skill-tag" data-skill="css">CSS</span>
+                <span class="skill-tag" data-skill="php">PHP</span>
+                <span class="skill-tag" data-skill="javascript">JavaScript</span>
+                <span class="skill-tag" data-skill="api">API Creation</span>
+                <span class="skill-tag" data-skill="bootstrap">Bootstrap</span>
+                <span class="skill-tag" data-skill="tailwind">Tailwind</span>
+                <span class="skill-tag" data-skill="laravel">Laravel</span>
+                
+                <h3>Cybersecurity</h3>
+                <span class="skill-tag" data-skill="wireshark">Wireshark</span>
+                <span class="skill-tag" data-skill="postman">Postman</span>
+                <span class="skill-tag" data-skill="security">Security Testing</span>
+                <span class="skill-tag" data-skill="encryption">Encryption</span>
+                
+                <h3>Software Programming</h3>
+                <span class="skill-tag" data-skill="java">Java</span>
+                <span class="skill-tag" data-skill="android">Android</span>
+                <span class="skill-tag" data-skill="embedded">Embedded Systems</span>
+            </div>
+        </section>
+        
+        <section class="projects-section">
+            <h2>Featured Projects</h2>
+            <div id="featured-projects">
+                <!-- Top 3 projects will be dynamically added here -->
+            </div>
+        </section>
+        
+        <div class="navigation-buttons">
+            <a href="studentProjects.html">Student Projects</a>
+            <a href="personalProjects.html">Personal Projects</a>
+        </div>
+    </main>
+    
+    <footer>
+        <section class="contact-section">
+            <h2>Contact Me</h2>
+            <p>Email: <a href="mailto:alexis.r.beriot@gmail.com">alexis.r.beriot@gmail.com</a></p>
+            
+            <form id="contact-form" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                
+                <div class="form-group">
+                    <label for="company">Company *</label>
+                    <input type="text" id="company" name="company" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message"></textarea>
+                </div>
+                
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+    </footer>
+    
+    <script>
+        // Add featured projects dynamically
+        document.addEventListener('DOMContentLoaded', () => {
+            const featuredContainer = document.getElementById('featured-projects');
+            
+            // Example: Top 3 projects
+            const project1 = developProject(
+                PROJECT_STATE.SMALL,
+                PROJECT_TYPE.PERSONAL,
+                'Caravan Card Game',
+                'Online implementation of Fallout: New Vegas Caravan card game',
+                'Full web-based implementation of the Caravan card game from Fallout: New Vegas, featuring multiplayer support, AI opponents, and comprehensive rule implementation.',
+                ['JavaScript', 'HTML', 'CSS', 'Game Logic']
+            );
+            
+            const project2 = developProject(
+                PROJECT_STATE.SMALL,
+                PROJECT_TYPE.SCHOOL,
+                'GLPI Database Scraper - DRAAF',
+                'Database scraper for collecting employee equipment inventory',
+                'Created a comprehensive GLPI database scraper for the DRAAF (French bureau of agricultural aid) to automatically collect and organize the list of all listed tools and equipment for each employee. Implemented efficient data extraction, validation, and reporting features.',
+                ['PHP', 'Database', 'API', 'Data Processing']
+            );
+            
+            const project3 = developProject(
+                PROJECT_STATE.SMALL,
+                PROJECT_TYPE.SCHOOL,
+                'YOWL Social Media',
+                'Complete pre-production design for social media platform',
+                'Comprehensive pre-production planning and design for YOWL social media project, including user flow diagrams, database schema, API documentation, UI/UX mockups, and technical specifications. Project scope intentionally limited to pre-production phase.',
+                ['Project Management', 'UI/UX', 'Database Design', 'API Design']
+            );
+            
+            featuredContainer.innerHTML = project1 + project2 + project3;
+        });
+        
+        // Handle contact form submission
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const company = document.getElementById('company').value;
+            const message = document.getElementById('message').value;
+            
+            const validationResult = validateContactForm(name, email, phone, company, message);
+            
+            if (validationResult && validationResult.success) {
+                sendEmail(
+                    'alexis.r.beriot@gmail.com',
+                    `Portfolio Contact from ${validationResult.name}`,
+                    validationResult.finalComment,
+                    validationResult.email,
+                    validationResult.phoneNumber
+                );
+            }
+        });
+    </script>
+</body>
+</html>
