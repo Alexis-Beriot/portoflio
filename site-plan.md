@@ -37,10 +37,10 @@
 #### 2.2 ORT Lyon - BTS SIO
 * a. Internship: DRAAF - Creating a GLPI Database scraper to collect the list of all the listed tools for each employee, for the DRAAF (French bureau of agricultural aid)
 * b. Creation of a database manipulation (CRUD-capable) website using Laravel
-* Internship: Restaurant - Creation of a website presenting the restaurant, openning hours, the menu and making an easily modifiable "dish of the day" page for the owner
-* Implementation of a local network at the scale of a small company
-* Creation of a small website for a professionnal psychiatrist
-* Creation, in Java, of a shop coin & bill machine to allow to validate, buy items and give out change
+* c. Internship: Restaurant - Creation of a website presenting the restaurant, opening hours, the menu and making an easily modifiable "dish of the day" page for the owner
+* d. Implementation of a local network at the scale of a small company
+* e. Creation of a small website for a professional psychiatrist
+* f. Creation, in Java, of a shop coin & bill machine to allow to validate, buy items and give out change
 * English: Validation of the TOEIC with 780+ points out of 990
 
 #### 2.3 IUT Lyon 2 Gratte-Ciel - BUT GEII [earliest]
@@ -81,49 +81,152 @@ Contact information (mail) and a form to fill in a name, email/phone number, and
 ## [Limitations]
 * No SQL / Database, the site should be fully static
 
-## [Functions Needed]
+## [Implementation Details]
 
-* `toggleProjectBox()`
-(how it should function:
-    - this function toggles a box made with developProject() into a small or large one when the project is clicked on
-    - if current state of developProject() is 1 it becomes 0 and vice-versa
-)
+### Security Features
+* **Strict Mode**: Enabled for better error checking and performance
+* **XSS Prevention**: All user inputs are escaped before rendering
+* **Input Validation**: Comprehensive validation on all form inputs and function parameters
+* **CSP-Friendly**: Event delegation instead of inline handlers
+* **ARIA Compliance**: Accessible alert messages with proper ARIA attributes
 
-* `developProject(big(1)/small(0), year(1)|school(0), category, shortInfo, longInfo, [skillList])`
-(how it should function:
-    - deployed, it should look like this: developProject(x, showProject(...))
-    - If the first variable is a 1, the project is put in a large box with the longInfo written
-    - If the first variable is a 0, the project is put in a medium box with the shortInfo written
-)
+### Best Practices
+* **Constants**: Magic numbers replaced with semantic constants (PROJECT_STATE, PROJECT_TYPE, LANGUAGE)
+* **Unique IDs**: Uses crypto.randomUUID() with timestamp fallback for project identification
+* **DRY Principle**: Message display logic consolidated in showMessage() helper
+* **Error Handling**: Graceful degradation and user-friendly error messages
+* **Initialization Safety**: Prevents duplicate event listener registration
+* **Browser Compatibility**: Fallbacks for older browsers (CSS.escape, crypto.randomUUID)
 
-* `switchLanguage(english(1)/français(0))`
-(how it should function:
-    - if switching to english go to page with same url minus the last 3 chars before ".html"
-    - if switching from english to french, go to page with same url but add "-fr" before ".html"
-)
+## [Constants]
 
-* `validateContactForm(name, email/NULL, phoneNumber/NULL, company, comment)`
-(how it should function:
-    - check if there is a name, if not, send error
-    - check if there is a company, if not, send error
-    - checks if there is either phone number or email, if there is not, bring up error
-    - checks if email is valid (if there is an email given), if not, bring up error
-    - checks if phone number is valid (+33 (french) or international), if not, bring up error
-    - checks if there are any comment, if not, the email should have a default content instead of the (non-existing) comment
-        - default comment is "[name] from [company] was interrested by your portfolio", if there already exists a comment, dont do that
-    - if everything is valid, send an email with the collected info using the sendEmail() function.
-        - it should be like the following: sendEmail(alexis.r.beriot@gmail.com, [name]+" "+[company], [comment]+" contacts at"+[email]+", "+[phoneNumber]) (but formated like an actual email)
-)
+* `PROJECT_STATE` - Object with LARGE (1) and SMALL (0) properties for project box sizes
+* `PROJECT_TYPE` - Object with PERSONAL (1) and SCHOOL (0) properties for project categories
+* `LANGUAGE` - Object with ENGLISH (1) and FRENCH (0) properties for language switching
 
-* `sendEmail(target, title, content)`
-(how it should function:
-    - use a mailing API to send an email with the title and content to the targeted email inbox (mine)
-        - target inbox is "alexis.r.beriot@gmail.com"
-)
+## [Functions Implemented]
 
-* highlightSkill(skill, [skillList])
-(how it should function:
-    - when a projectBox is hovered on by the user, the skills within the project's skillList are highlighted until the hovering of the project stops
-        - highlighting is a css class change using javaScript
-    - if the skill is in the skillList, instead of returning just the html line, return the line but with the correct css class change
-)
+### Core Functions
+
+* `toggleProjectBox(projectElement)`
+    - Toggles a project box between expanded (large) and collapsed (small) states
+    - Uses classList.toggle() for efficient class management
+    - Updates data-expanded attribute (1 for large, 0 for small)
+    - Triggered automatically via event delegation on click
+
+* `developProject(big, type, category, shortInfo, longInfo, skillList = [])`
+    - **Parameters:**
+        - `big`: PROJECT_STATE.LARGE (1) for large box with longInfo, PROJECT_STATE.SMALL (0) for small box with shortInfo
+        - `type`: PROJECT_TYPE.PERSONAL (1) for personal projects, PROJECT_TYPE.SCHOOL (0) for school projects
+        - `category`: Project title/category name (string, required)
+        - `shortInfo`: Brief description (string, required)
+        - `longInfo`: Detailed description (string, required)
+        - `skillList`: Array of skill strings (optional, defaults to empty array)
+    - **Returns:** HTML string for the project box
+    - **Features:**
+        - Validates all parameters before processing
+        - Uses crypto.randomUUID() for unique IDs (fallback to timestamp-based)
+        - Escapes all user input to prevent XSS attacks
+        - Generates skill tags with proper data attributes for highlighting
+        - Returns empty string if validation fails
+
+* `switchLanguage(lang)`
+    - **Parameters:**
+        - `lang`: LANGUAGE.ENGLISH (1) or LANGUAGE.FRENCH (0)
+    - **Behavior:**
+        - Validates language parameter
+        - English: removes "-fr" before ".html" in URL
+        - French: adds "-fr" before ".html" in URL
+        - Normalizes non-HTML routes to index.html
+        - Preserves URL search parameters and hash
+        - Only navigates if path actually changes
+        - Prevents duplicate "-fr-fr" patterns
+
+* `validateContactForm(name, email, phoneNumber, company, comment)`
+    - **Validation checks:**
+        - Name is required (non-empty string)
+        - Company is required (non-empty string)
+        - At least one contact method required (email OR phone)
+        - Email format validation (if provided)
+        - Phone number validation: French (+33 or 0) or international format
+    - **Returns:** 
+        - Object with validated data on success: `{success: true, name, email, phoneNumber, company, finalComment}`
+        - `false` on validation failure
+    - **Default comment:** "[name] from [company] was interested in your portfolio"
+    - Displays user-friendly error messages via showError()
+
+* `sendEmail(target, title, content, senderEmail = '', senderPhone = '')`
+    - **Parameters:**
+        - `target`: Recipient email address (validated)
+        - `title`: Email subject line
+        - `content`: Email body content
+        - `senderEmail`: Sender's email (optional)
+        - `senderPhone`: Sender's phone (optional)
+    - **Features:**
+        - Validates target email address
+        - Sanitizes all inputs with escapeHtml()
+        - Formats contact information in email footer
+        - Uses EmailJS API (requires configuration: serviceID, templateID, publicKey)
+        - Graceful fallback: logs preview on localhost if credentials not configured
+        - Initializes EmailJS only once per session
+        - Shows success/error messages to user
+        - Resets contact form on successful send
+
+### Skill Highlighting
+
+* `highlightSkill(projectElement, skillList, isHovering)`
+    - **Parameters:**
+        - `projectElement`: The project box HTML element
+        - `skillList`: Array of skill strings
+        - `isHovering`: Boolean (true when mouse enters, false when leaves)
+    - **Behavior:**
+        - Finds all skill tags matching the project's skills
+        - Adds/removes 'skill-highlighted' CSS class
+        - Uses normalized skill keys for matching
+
+* `attachHighlightListeners(projectId, skillList)`
+    - **Parameters:**
+        - `projectId`: ID of the project element
+        - `skillList`: Array of skill strings
+    - **Behavior:**
+        - Validates inputs before processing
+        - Attaches mouseenter/mouseleave event listeners
+        - Warns in console if project element not found
+
+### User Messaging
+
+* `showError(message)` - Displays error message (red alert, 5 second duration)
+* `showSuccess(message)` - Displays success message (green alert, 5 second duration)
+* `showInfo(message)` - Displays info message (blue alert, 5 second duration)
+* `showMessage(type, message, duration = 5000)` - Generic message display (private helper)
+    - Creates ARIA-compliant alert elements
+    - Auto-dismisses after specified duration
+    - Prevents message overlap with timer management
+    - Works even before DOM ready
+
+### Security & Validation Helpers
+
+* `escapeHtml(text)` - Escapes HTML special characters to prevent XSS attacks
+* `normalizeSkillKey(skill)` - Encodes skill strings for safe use in data attributes
+* `safeCssEscape(value)` - CSS selector escaping with fallback for older browsers
+* `isValidEmail(email)` - Validates email format with regex
+* `isValidPhoneNumber(phone)` - Validates French and international phone formats
+* `resetContactForm()` - Resets the contact form after successful submission
+
+### Initialization
+
+* `initProjectToggle()` - Initializes click event delegation for project box toggling
+    - Prevents duplicate initialization
+    - Uses CSP-friendly event delegation
+    - Waits for DOM ready before attaching listeners
+
+## [EmailJS Configuration Required]
+
+To enable email functionality, replace placeholder values in sendEmail():
+```javascript
+const serviceID = 'your_service_id';
+const templateID = 'your_template_id';
+const publicKey = 'your_public_key';
+```
+
+Target email: alexis.r.beriot@gmail.com
