@@ -158,10 +158,15 @@ function validateContactForm(name, email, phoneNumber, company, comment) {
         ? comment 
         : `${name} from ${company} was interested by your portfolio`;
     
-    // Send email with validated data
-    sendEmail('alexis.r.beriot@gmail.com', `${name} - ${company}`, finalComment, email, phoneNumber);
-    
-    return true;
+    // Return validated data (caller will invoke sendEmail)
+    return {
+        success: true,
+        name: name.trim(),
+        email: email ? email.trim() : '',
+        phoneNumber: phoneNumber ? phoneNumber.trim() : '',
+        company: company.trim(),
+        finalComment: finalComment
+    };
 }
 
 /**
@@ -210,6 +215,25 @@ function sendEmail(target, title, content, senderEmail = '', senderPhone = '') {
     const templateID = 'template_id'; // Replace with your template ID
     const publicKey = 'public_key'; // Replace with your public key
     
+    // Validate EmailJS credentials before attempting to send
+    const isValidCredentials = serviceID && templateID && publicKey && 
+        serviceID !== 'service_id' && 
+        templateID !== 'template_id' && 
+        publicKey !== 'public_key';
+    
+    if (!isValidCredentials) {
+        console.warn('EmailJS credentials are not configured. Missing or placeholder values detected:');
+        if (serviceID === 'service_id' || !serviceID) console.warn('  - serviceID is missing or placeholder');
+        if (templateID === 'template_id' || !templateID) console.warn('  - templateID is missing or placeholder');
+        if (publicKey === 'public_key' || !publicKey) console.warn('  - publicKey is missing or placeholder');
+        
+        // Fallback: Log to console for development
+        console.log('Email would be sent with the following content:');
+        console.log({ target, title, content: emailContent });
+        showInfo('Preview only — no email was sent. EmailJS is not configured.');
+        return;
+    }
+    
     const templateParams = {
         to_email: target,
         from_name: title,
@@ -217,8 +241,7 @@ function sendEmail(target, title, content, senderEmail = '', senderPhone = '') {
         reply_to: senderEmail
     };
     
-    // Uncomment when EmailJS is set up
-    /*
+    // Send email only if credentials are valid
     emailjs.init(publicKey);
     emailjs.send(serviceID, templateID, templateParams)
         .then(() => {
@@ -229,12 +252,6 @@ function sendEmail(target, title, content, senderEmail = '', senderPhone = '') {
             showError('Failed to send email. Please try again later.');
             console.error('Email error:', error);
         });
-    */
-    
-    // Fallback: Log to console for development
-    console.log('Email would be sent with the following content:');
-    console.log({ target, title, content: emailContent });
-    showInfo('Preview only — no email was sent. EmailJS is not configured.');
 }
 
 /**
@@ -248,7 +265,8 @@ function highlightSkill(projectElement, skillList, isHovering) {
     if (!projectElement || !skillList || skillList.length === 0) return;
     
     skillList.forEach(skill => {
-        const skillElements = document.querySelectorAll(`[data-skill="${skill}"]`);
+        const escapedSkill = CSS.escape(skill);
+        const skillElements = document.querySelectorAll(`[data-skill="${escapedSkill}"]`);
         skillElements.forEach(element => {
             if (isHovering) {
                 element.classList.add('skill-highlighted');
