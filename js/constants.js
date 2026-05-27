@@ -21,6 +21,11 @@ export const PROJECT_TYPE = {
     SCHOOL: 0
 };
 
+export const PROJECT_STATUS = {
+    COMPLETED: 1,
+    WORK_IN_PROGRESS: 0
+};
+
 export const LANGUAGE = {
     ENGLISH: 1,
     FRENCH: 0

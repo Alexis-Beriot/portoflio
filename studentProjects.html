@@ -92,6 +92,7 @@
             developProject, 
             PROJECT_STATE, 
             PROJECT_TYPE,
+            PROJECT_STATUS,
             validateContactForm,
             sendEmail,
             switchLanguage,
@@ -110,23 +111,28 @@
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'Product Design Hackathon', 
                     'Eco-friendly city comparison app', 
                     'Created an application to compare the eco-friendly infrastructure of different cities, towns, and localities during a hackathon at Epitech.',
-                    ['JavaScript', 'UI/UX', 'Project Management', 'API']) +
+                    ['JavaScript', 'UI/UX', 'Project Management', 'API'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'YOWL Social Media', 
                     'Social media pre-production design', 
                     'Complete pre-production planning for a social media platform including user flow diagrams, database schema, API documentation, and UI/UX mockups.',
-                    ['Project Management', 'Database Design', 'API Design', 'UI/UX']) +
+                    ['Project Management', 'Database Design', 'API Design', 'UI/UX'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'HackAndJuice', 
                     'Security vulnerability exploitation', 
                     'Finding and documenting exploit flags on a deliberately vulnerable website to learn about common security flaws.',
-                    ['Security', 'Wireshark', 'Postman']) +
+                    ['Security', 'Wireshark', 'Postman'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'Etodo', 
                     'Agenda web application', 
                     'Full-featured agenda and task management web application with user authentication and task organization.',
-                    ['HTML', 'CSS', 'JavaScript', 'PHP', 'Database']) +
+                    ['HTML', 'CSS', 'JavaScript', 'PHP', 'Database'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'Digital Resume', 
                     'Resume posting website', 
                     'Light project for creating and posting professional resumes online.',
-                    ['HTML', 'CSS', 'JavaScript']);
+                    ['HTML', 'CSS', 'JavaScript'],
+                    PROJECT_STATUS.COMPLETED);
             
             // ORT Lyon Projects
             const ortContainer = document.getElementById('ort-projects');
@@ -134,27 +140,33 @@
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'DRAAF - GLPI Scraper', 
                     'Database scraper for equipment inventory', 
                     'Created a GLPI Database scraper to collect the list of all listed tools for each employee at the DRAAF (French bureau of agricultural aid).',
-                    ['PHP', 'Database', 'API', 'Data Processing']) +
+                    ['PHP', 'Database', 'API', 'Data Processing'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'Laravel CRUD Website', 
                     'Database manipulation website', 
                     'Full CRUD (Create, Read, Update, Delete) capable website using the Laravel framework for database management.',
-                    ['Laravel', 'PHP', 'Database', 'HTML', 'CSS']) +
+                    ['Laravel', 'PHP', 'Database', 'HTML', 'CSS'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'Restaurant Website', 
                     'Professional restaurant site', 
                     'Website presenting a restaurant with opening hours, menu, and an easily modifiable "dish of the day" page for the owner.',
-                    ['HTML', 'CSS', 'PHP', 'JavaScript']) +
+                    ['HTML', 'CSS', 'PHP', 'JavaScript'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'Network Implementation', 
                     'Small company network setup', 
                     'Implementation of a local network at the scale of a small company with proper security and infrastructure.',
-                    ['Networking', 'Security']) +
+                    ['Networking', 'Security'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'Psychiatrist Website', 
                     'Professional medical website', 
                     'Small professional website for a psychiatrist practice.',
-                    ['HTML', 'CSS', 'JavaScript']) +
+                    ['HTML', 'CSS', 'JavaScript'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'Java Cash Register', 
                     'Shop coin & bill machine', 
                     'Created in Java: a shop coin and bill machine to validate purchases, process transactions, and give out change.',
-                    ['Java']);
+                    ['Java'],
+                    PROJECT_STATUS.COMPLETED);
             
             // IUT Projects
             const iutContainer = document.getElementById('iut-projects');
@@ -162,19 +174,23 @@
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'Programmable Chip', 
                     'Custom chip design and programming', 
                     'Designing and programming of a custom programmable chip for use in other embedded system projects.',
-                    ['Embedded Systems', 'Programming']) +
+                    ['Embedded Systems', 'Programming'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'Keycard Scanner', 
                     'Car-park barrier system', 
                     'Creation of a keycard scanner and control program for an automated car-park barrier system.',
-                    ['Embedded Systems', 'Programming', 'Hardware']) +
+                    ['Embedded Systems', 'Programming', 'Hardware'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'High-Voltage Certification', 
                     'Electrical safety qualification', 
                     'Passed tests to operate on high-voltage equipment while wearing protective gear.',
-                    ['Safety', 'Electrical Engineering']) +
+                    ['Safety', 'Electrical Engineering'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(PROJECT_STATE.SMALL, PROJECT_TYPE.SCHOOL, 'Logic Systems', 
                     'Industrial automation projects', 
                     'Production and wiring of logic-based systems including an Elevator, Factory production machine, counter systems, and LED alert systems.',
-                    ['Embedded Systems', 'Logic Design', 'Wiring']);
+                    ['Embedded Systems', 'Logic Design', 'Wiring'],
+                    PROJECT_STATUS.COMPLETED);
         });
         
         // Handle contact form submission

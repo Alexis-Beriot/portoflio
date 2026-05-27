@@ -78,6 +78,7 @@
             developProject, 
             PROJECT_STATE, 
             PROJECT_TYPE,
+            PROJECT_STATUS,
             validateContactForm,
             sendEmail,
             switchLanguage,
@@ -99,21 +100,24 @@
                     'Caravan Card Game', 
                     'Online multiplayer card game based on Fallout: New Vegas', 
                     'Full web-based implementation of the Caravan card game from Fallout: New Vegas. Features include multiplayer support, AI opponents, comprehensive rule implementation, deck building, and game state management. Built entirely with vanilla JavaScript and modern web APIs.',
-                    ['JavaScript', 'HTML', 'CSS', 'Game Logic', 'Multiplayer', 'AI']) +
+                    ['JavaScript', 'HTML', 'CSS', 'Game Logic', 'Multiplayer', 'AI'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(
                     PROJECT_STATE.SMALL, 
                     PROJECT_TYPE.PERSONAL, 
                     'TTRPG Character Sheet', 
                     'Universal TTRPG character sheet database and API', 
                     'Created a flexible character sheet database and API compatible with any tabletop role-playing game system. Features include user authentication, character CRUD operations, template system for different game systems, data validation, and RESTful API for third-party integration.',
-                    ['PHP', 'Database', 'API', 'JavaScript', 'Authentication']) +
+                    ['PHP', 'Database', 'API', 'JavaScript', 'Authentication'],
+                    PROJECT_STATUS.COMPLETED) +
                 developProject(
                     PROJECT_STATE.SMALL, 
                     PROJECT_TYPE.PERSONAL, 
                     'Wattz 1000 Laser Pistol Prop', 
                     'Functional prop replica from Fallout 1 (Unfinished)', 
                     'Designing and building a prop/toy laser pistol based on the Wattz 1000 from Fallout 1. Project includes 3D modeling, electronics integration for LED effects and sound, trigger mechanism, and weathering/painting for authentic look. Currently on hold but foundation completed.',
-                    ['3D Modeling', 'Electronics', 'Props', 'Design']);
+                    ['3D Modeling', 'Electronics', 'Props', 'Design'],
+                    PROJECT_STATUS.WORK_IN_PROGRESS);
         });
         
         // Handle contact form submission

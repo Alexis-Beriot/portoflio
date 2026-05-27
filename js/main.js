@@ -11,7 +11,7 @@
 'use strict';
 
 // Import constants
-import { PROJECT_STATE, PROJECT_TYPE, LANGUAGE } from './constants.js';
+import { PROJECT_STATE, PROJECT_TYPE, PROJECT_STATUS, LANGUAGE } from './constants.js';
 
 // Import security functions
 import { escapeHtml, normalizeSkillKey, safeCssEscape } from './security.js';
@@ -49,6 +49,17 @@ function initProjectToggle() {
     document.addEventListener('click', event => {
         const projectElement = event.target.closest('.project-box[data-toggle="project"]');
         if (projectElement) {
+            // Check if any project is currently in fullscreen
+            const fullscreenProject = document.querySelector('.project-fullscreen');
+            
+            // Only allow toggle if:
+            // 1. No project is fullscreen, OR
+            // 2. The clicked project IS the fullscreen project (closing it)
+            if (fullscreenProject && fullscreenProject !== projectElement) {
+                event.preventDefault();
+                return;
+            }
+            
             event.preventDefault();
             toggleProjectBox(projectElement);
         }
@@ -78,6 +89,7 @@ export {
     // Constants
     PROJECT_STATE,
     PROJECT_TYPE,
+    PROJECT_STATUS,
     LANGUAGE,
     
     // Security functions

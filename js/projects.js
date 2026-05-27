@@ -13,12 +13,14 @@
  */
 'use strict';
 
-import { PROJECT_STATE, PROJECT_TYPE, incrementProjectCounter } from './constants.js';
+import { PROJECT_STATE, PROJECT_TYPE, PROJECT_STATUS, incrementProjectCounter } from './constants.js';
 import { escapeHtml, normalizeSkillKey, safeCssEscape } from './security.js';
 
 /**
  * Toggles a project box between expanded and collapsed states
  * Changes the state from 1 (large) to 0 (small) or vice versa
+ * Also switches between short and long content text
+ * When expanded, displays in fullscreen overlay mode and closes on outside click
  * @param {HTMLElement} projectElement - The project element to toggle
  * @returns {void}
  */
@@ -31,6 +33,38 @@ export function toggleProjectBox(projectElement) {
     // Use classList.toggle for cleaner code
     projectElement.classList.toggle('project-large', !isExpanded);
     projectElement.classList.toggle('project-small', isExpanded);
+    projectElement.classList.toggle('project-fullscreen', !isExpanded);
+    
+    // Toggle body class for backdrop effect
+    document.body.classList.toggle('project-fullscreen-active', !isExpanded);
+    
+    // Switch between short and long content
+    const contentDiv = projectElement.querySelector('.project-content');
+    if (contentDiv) {
+        const shortContent = projectElement.dataset.shortContent;
+        const longContent = projectElement.dataset.longContent;
+        
+        if (isExpanded) {
+            // Was expanded, now collapsing - show short content
+            contentDiv.textContent = shortContent;
+            // Remove the click-to-close listener
+            document.removeEventListener('click', projectElement._closeFullscreenListener);
+        } else {
+            // Was collapsed, now expanding - show long content
+            contentDiv.textContent = longContent;
+            // Add click-to-close listener for fullscreen mode
+            const closeFullscreenListener = (event) => {
+                // Only close if clicking outside the project box
+                if (!projectElement.contains(event.target)) {
+                    event.stopPropagation();
+                    toggleProjectBox(projectElement);
+                }
+            };
+            // Store reference to listener for cleanup
+            projectElement._closeFullscreenListener = closeFullscreenListener;
+            document.addEventListener('click', closeFullscreenListener);
+        }
+    }
 }
 
 /**
@@ -41,9 +75,10 @@ export function toggleProjectBox(projectElement) {
  * @param {string} shortInfo - Short description
  * @param {string} longInfo - Long/detailed description
  * @param {string[]} skillList - Array of skills used in the project
+ * @param {number} [status=null] - PROJECT_STATUS.COMPLETED (1) or PROJECT_STATUS.WORK_IN_PROGRESS (0), null for no status display
  * @returns {string} HTML string for the project box
  */
-export function developProject(big, type, category, shortInfo, longInfo, skillList = []) {
+export function developProject(big, type, category, shortInfo, longInfo, skillList = [], status = null) {
     // Validate required parameters
     if (big !== PROJECT_STATE.LARGE && big !== PROJECT_STATE.SMALL) {
         console.error('Invalid size parameter. Use PROJECT_STATE.LARGE or PROJECT_STATE.SMALL');
@@ -102,8 +137,21 @@ export function developProject(big, type, category, shortInfo, longInfo, skillLi
             '</div>';
     }
     
+    // Escape both versions of content
+    const escapedShortInfo = escapeHtml(shortInfo);
+    const escapedLongInfo = escapeHtml(longInfo);
+    
+    // Generate status tag HTML if status is provided
+    let statusHtml = '';
+    if (status === PROJECT_STATUS.COMPLETED || status === PROJECT_STATUS.WORK_IN_PROGRESS) {
+        const statusText = status === PROJECT_STATUS.COMPLETED ? 'Completed' : 'Work in Progress';
+        const statusClass = status === PROJECT_STATUS.COMPLETED ? 'status-completed' : 'status-wip';
+        statusHtml = `<span class="project-status ${statusClass}">${statusText}</span>`;
+    }
+    
     const html = `
-        <div id="${projectId}" class="project-box ${sizeClass}" data-expanded="${big}" data-toggle="project">
+        <div id="${projectId}" class="project-box ${sizeClass}" data-expanded="${big}" data-toggle="project" data-short-content="${escapedShortInfo}" data-long-content="${escapedLongInfo}">
+            ${statusHtml}
             <div class="project-header">
                 <h3 class="project-title">${escapedCategory}</h3>
                 <span class="project-type">${typeLabel}</span>
